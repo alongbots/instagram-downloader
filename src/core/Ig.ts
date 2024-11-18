@@ -1,27 +1,31 @@
-import axios from  "axios"
-import {getInfo} from "next/dist/server/typescript/utils";
+import axios, {AxiosResponse} from "axios"
+import {GraphQLResponse, MediaData, ResourceInfo} from "@/types";
+import dayjs from "dayjs";
+
+const headers = {
+  Accept: "*/*",
+  "Accept-Language": "en-US,en;q=0.5",
+  "Content-Type": "application/x-www-form-urlencoded",
+  "X-FB-Friendly-Name": "PolarisPostActionLoadPostQueryQuery",
+  "X-CSRFToken": "RVDUooU5MYsBbS1CNN3CzVAuEP8oHB52",
+  "X-IG-App-ID": "1217981644879628",
+  "X-FB-LSD": "AVqbxe3J_YA",
+  "X-ASBD-ID": "129477",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-origin",
+  "User-Agent":
+    "Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36",
+}
 
 export default class Ig {
-  public shortcode
+  public shortcode: string
+  
   constructor(url: string) {
     this.shortcode = this.parseShortcodeFromUrl(url)
   }
   
-  public getHeaders() {
-    return {
-      accept: "*/*",
-      host: "www.instagram.com",
-      referer: "https://www.instagram.com/",
-      DNT: "1",
-      "Sec-Fetch-Dest": "document",
-      "Sec-Fetch-Mode": "navigate",
-      "Sec-Fetch-Site": "same-origin",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",
-    }
-  }
-  
-  public getRequestBody(): string {
+  private getRequestBody(): string {
     const requestData = {
       av: "0",
       __d: "www",
@@ -62,34 +66,68 @@ export default class Ig {
       server_timestamps: "true",
       doc_id: "10015901848480474",
     }
-    const params = new URLSearchParams(requestData)
-    return params.toString()
+    return new URLSearchParams(requestData).toString()
   }
   
-  public async getData(): Promise<any> {
+  private async requestData(): Promise<GraphQLResponse> {
     try {
-      const res = await axios.post('/api/graphql',{
-        baseURL: 'https://wwww.instagram.com',
-        headers: this.getHeaders(),
+      const res: AxiosResponse<GraphQLResponse> = await axios({
+        url: 'https://www.instagram.com/api/graphql',
+        method: 'post',
+        headers: headers,
         data: this.getRequestBody()
       })
+      if(res.status !== 200) {
+        throw new Error('Request to Instagram Error')
+      }
       return res.data
     } catch(e) {
       console.log('请求错误：', e)
+      throw new Error('Data Request Error')
     }
-   
   }
   
-  public async getInfo() {
-    const data = await this.getData()
-    return this.getVideoInfo(data)
+  public async getData() {
+    const data = await this.requestData()
+    this.formatToResourceInfo(data?.xdt_shortcode_media)
   }
   
-  private getVideoInfo(data: any) {
-    return data
+  private formatToResourceInfo(mediaData?: MediaData): ResourceInfo[] {
+    if(!mediaData) {
+      return
+    }
+    const nodes = meidiaData.edge_sidecar_to_children
+    if(nodes) {
+      return nodes.edges.map(node => ({
+        ...this.formatToResourceInfo(node)
+      }))
+    }
+    if(mediaData.is_video) {
+      return [{
+        filename: `ig-video-${dayjs().format('YYYY-MM-DDTHH:mm:ss')}.mp4`,
+        width: mediaData.dimensions.width,
+        height: mediaData.dimensions.height,
+        url: mediaData.video_url,
+        type: 'Video'
+      }]
+    } else {
+      const imageData = mediaData.display_resources.at(-1)
+      return [{
+        filename: `ig-img-${dayjs().format('YYYY-MM-DDTHH:mm:ss')}.jpeg`,
+        width: imageData.config_width,
+        height: imageData.config_height,
+        url: imageData.src,
+        type: 'Image'
+      }]
+    }
   }
   
-  private parseShortcodeFromUrl(url: string) {
-    return url
+  private parseShortcodeFromUrl(url: string):string {
+    const matchShortcodeReg = /\/(?:p|reel|tv)\/([a-zA-Z0-9_\-]+)/;
+    const matcher = url.match(matchShortcodeReg)
+    if(!matcher) {
+      throw new Error('No Shortcode Found!')
+    }
+    return matcher[1]
   }
 }
