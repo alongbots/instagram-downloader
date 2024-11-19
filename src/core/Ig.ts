@@ -94,7 +94,7 @@ export default class Ig {
 
   public formatToResourceInfo(mediaData?: MediaData): ResourceInfo[] {
     if (!mediaData) {
-      return
+      return []
     }
     const nodes = mediaData.edge_sidecar_to_children
     if (nodes) {
@@ -117,9 +117,9 @@ export default class Ig {
       return [
         {
           filename: `ig-img-${dayjs().format('YYYY-MM-DDTHH:mm:ss')}.jpeg`,
-          width: imageData.config_width,
-          height: imageData.config_height,
-          url: imageData.src,
+          width: imageData?.config_width ?? 0,
+          height: imageData?.config_height ?? 0,
+          url: imageData?.src ?? '',
           type: 'Image'
         }
       ]

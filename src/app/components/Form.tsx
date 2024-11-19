@@ -19,7 +19,7 @@ export default function Form() {
               //   alt=""
               //   crossOrigin="anonymous"
               // />
-              <a href={info.url} target="_blank" className="truncate">
+              <a href={info.url} target="_blank" className="truncate" key={i}>
                 {info.url}
               </a>
             )

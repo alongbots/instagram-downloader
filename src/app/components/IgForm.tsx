@@ -28,7 +28,7 @@ export default function IgForm({
         method: 'get'
       })
       if (res.status !== 200) {
-        toast(`Error: ${res.message}`)
+        toast(`Error: ${res.data.message}`)
         return
       }
       onGetData?.(res.data.data)
