@@ -1,7 +1,6 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import axios from 'axios'
@@ -14,8 +13,6 @@ export default function IgForm({
 }: {
   onGetData?: (res: ResourceInfo[]) => void
 }) {
-  const { setTheme } = useTheme()
-  setTheme('dark')
 
   const [postUrl, setPostUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -38,14 +35,27 @@ export default function IgForm({
       setLoading(false)
     }
   }
+
+  const onClear = () => {
+    setPostUrl('')
+  }
+
+  const onPaste = async() => {
+    const text = await navigator.clipboard.readText()
+    setPostUrl(text)
+  }
   return (
     <>
-      <Input
-        type="text"
-        placeholder="Please Paste Ig Share Link"
-        value={postUrl}
-        onChange={(e) => setPostUrl(e.target.value)}
-      />
+      <div className="flex items-center space-x-2">
+        <Input
+          type="text"
+          placeholder="Paste Instagram Link here"
+          value={postUrl}
+          onChange={(e) => setPostUrl(e.target.value)}
+        />
+        {postUrl && <Button  onClick={onClear}>Clear</Button>}
+        {!postUrl && <Button  onClick={onPaste}>Paste</Button>}
+      </div>
       <Button className="mt-4" onClick={getIgInfo} disabled={loading}>
         {loading && <Loader2 className="animate-spin" />}
         Download

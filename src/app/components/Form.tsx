@@ -25,13 +25,18 @@ export default function Form() {
             )
           } else if (info.type === 'Video') {
             return (
-              <video
-                key={i}
-                src={info.url}
-                className="w-full h-[400px] rounded-b"
-                controls
-                autoPlay
-              ></video>
+              <div key={i}>
+                <video
+                  className="w-full h-[400px] rounded-b"
+                  controls
+                  playsInline={true}
+                >
+                  <source src={info.url} type="video/mp4" />
+                </video>
+                <a href={info.url} download >
+                    Long press here to save
+                </a>
+              </div>
             )
           }
         })}
