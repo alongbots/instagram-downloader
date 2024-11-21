@@ -19,7 +19,7 @@ const headers = {
 }
 
 export default class Ig {
-  public shortcode: string
+  public shortcode: string | null = null
 
   constructor(url?: string) {
     if (url) {

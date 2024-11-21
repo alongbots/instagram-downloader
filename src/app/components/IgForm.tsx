@@ -3,7 +3,7 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ResourceInfo } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
@@ -39,7 +39,9 @@ export default function IgForm({
       console.log(e)
       toast({
         title: 'Error',
-        description: e?.response?.data?.message ?? e.toString(),
+        description:
+          ((e as AxiosError)?.response?.data as any)?.message ??
+          (e as AxiosError).message,
         action: <ToastAction altText="Try again">Try again</ToastAction>
       })
     } finally {

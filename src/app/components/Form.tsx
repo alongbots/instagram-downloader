@@ -1,15 +1,18 @@
 'use client'
 import IgForm from '@/app/components/IgForm'
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { ResourceInfo } from '@/types'
 import { toCorsUrl } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import Image from 'next/image'
 
-const LongPressSave = memo((props: { href: string }) => (
-  <a href={props.href} download>
-    <Badge>Long Press Save</Badge>
-  </a>
-))
+function LongPressSave(props: { href: string }) {
+  return (
+    <a href={props.href} download>
+      <Badge>Long Press Save</Badge>
+    </a>
+  )
+}
 
 export default function Form() {
   const [resourceInfo, setResourceInfo] = useState<ResourceInfo[]>([])
@@ -22,7 +25,7 @@ export default function Form() {
           if (info.type === 'Image') {
             return (
               <div key={i}>
-                <img
+                <Image
                   key={i}
                   src={toCorsUrl(info.url)}
                   className="object-contain w-full h-[400px]"

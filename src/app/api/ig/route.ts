@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Ig from '@/core/Ig'
+import { AxiosError } from 'axios'
 
 export async function GET(req: NextRequest) {
   const postUrl = req.nextUrl.searchParams.get('postUrl')
@@ -23,10 +24,9 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     )
   } catch (e) {
-    console.log('e', e)
     return NextResponse.json(
       {
-        message: e.toString()
+        message: (e as AxiosError).message
       },
       { status: 500 }
     )
