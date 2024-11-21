@@ -23,9 +23,10 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     )
   } catch (e) {
+    console.log('e', e)
     return NextResponse.json(
       {
-        message: e
+        message: e.toString()
       },
       { status: 500 }
     )

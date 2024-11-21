@@ -11,13 +11,17 @@ npm install && npm run dev
 ## Features
 - Various types of instagram share link: post, reel, igtv...
 - Video preview
-- Image link(click to jump)
+- Image preview
+- Error message
 
 ## Next Steps
 - More compatible
-- Add image preview
-- Add video download button
+- Add image preview ✅
+- Add video download button ✅
 - Adapt to desktop screen size
+- Instagram story
+- Private post
 
 ## Acknowledgements
 [Instagram Video Downloader](https://github.com/riad-azz/instagram-video-downloader)
+[corsDown](https://github.com/crypto-su/corsDown)

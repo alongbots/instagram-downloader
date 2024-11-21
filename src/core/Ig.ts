@@ -21,8 +21,10 @@ const headers = {
 export default class Ig {
   public shortcode: string
 
-  constructor(url: string) {
-    this.shortcode = this.parseShortcodeFromUrl(url)
+  constructor(url?: string) {
+    if (url) {
+      this.shortcode = this.parseShortcodeFromUrl(url)
+    }
   }
 
   private getRequestBody(): string {
@@ -71,7 +73,7 @@ export default class Ig {
 
   private async requestData(): Promise<GraphQLResponse> {
     try {
-      const res: AxiosResponse<GraphQLResponse> = await axios({
+      const res: AxiosResponse = await axios({
         url: 'https://www.instagram.com/api/graphql',
         method: 'post',
         headers: headers,
@@ -80,6 +82,9 @@ export default class Ig {
       if (res.status !== 200) {
         throw new Error('Request to Instagram Error')
       }
+      if (!res.data.data?.xdt_shortcode_media) {
+        throw new Error('No Content')
+      }
       return res.data
     } catch (e) {
       console.log('请求错误：', e)
@@ -87,7 +92,13 @@ export default class Ig {
     }
   }
 
-  public async getData() {
+  public async getData(shortcode?: string) {
+    if (shortcode) {
+      this.shortcode = shortcode
+    }
+    if (!this.shortcode) {
+      throw new Error('Url or Shortcode is Not Defined')
+    }
     const data = await this.requestData()
     return this.formatToResourceInfo(data.data?.xdt_shortcode_media)
   }
@@ -130,7 +141,7 @@ export default class Ig {
     const matchShortcodeReg = /\/(?:p|reel|tv)\/([a-zA-Z0-9_\-]+)/
     const matcher = url.match(matchShortcodeReg)
     if (!matcher) {
-      throw new Error('No Shortcode Found!')
+      throw new Error('No Shortcode Found in Url!')
     }
     return matcher[1]
   }

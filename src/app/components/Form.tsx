@@ -1,10 +1,19 @@
 'use client'
 import IgForm from '@/app/components/IgForm'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { ResourceInfo } from '@/types'
+import { toCorsUrl } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+
+const LongPressSave = memo((props: { href: string }) => (
+  <a href={props.href} download>
+    <Badge>Long Press Save</Badge>
+  </a>
+))
 
 export default function Form() {
   const [resourceInfo, setResourceInfo] = useState<ResourceInfo[]>([])
+
   return (
     <>
       <IgForm onGetData={setResourceInfo} />
@@ -12,16 +21,15 @@ export default function Form() {
         {resourceInfo.map((info, i) => {
           if (info.type === 'Image') {
             return (
-              // <img
-              //   key={i}
-              //   src={info.url}
-              //   className=" object-contain rounded-b w-full h-[400px]"
-              //   alt=""
-              //   crossOrigin="anonymous"
-              // />
-              <a href={info.url} target="_blank" className="truncate" key={i}>
-                {info.url}
-              </a>
+              <div key={i}>
+                <img
+                  key={i}
+                  src={toCorsUrl(info.url)}
+                  className="object-contain w-full h-[400px]"
+                  alt=""
+                />
+                <LongPressSave href={info.url} />
+              </div>
             )
           } else if (info.type === 'Video') {
             return (
@@ -30,12 +38,13 @@ export default function Form() {
                   className="w-full h-[400px] rounded-b"
                   controls
                   playsInline={true}
+                  preload="metadata"
+                  muted
+                  loop={true}
                 >
                   <source src={info.url} type="video/mp4" />
                 </video>
-                <a href={info.url} download >
-                    Long press here to save
-                </a>
+                <LongPressSave href={info.url} />
               </div>
             )
           }

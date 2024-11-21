@@ -1,9 +1,9 @@
 import Ig from '@/core/Ig'
 
-const ig = new Ig('https://www.instagram.com/reel/DCZJdjKyB7x/?utm_source=ig_web_copy_link')
+const ig = new Ig()
 
 async function main() {
-  const res =  await ig.getData()
+  const res = await ig.getData('32439100503')
   console.log(res)
 }
 

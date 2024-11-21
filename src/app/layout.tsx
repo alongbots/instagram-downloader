@@ -16,7 +16,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'Insta J',
-  description: 'Instagram image and video downloader. Support post, reel, igtv...'
+  description:
+    'Instagram image and video downloader. Support post, reel, igtv...'
 }
 
 export default function RootLayout({
@@ -31,7 +32,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
