@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { ResourceInfo } from '@/types'
 import { toCorsUrl } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import Image from 'next/image'
 
 function LongPressSave(props: { href: string }) {
   return (
@@ -25,7 +24,7 @@ export default function Form() {
           if (info.type === 'Image') {
             return (
               <div key={i}>
-                <Image
+                <img
                   key={i}
                   src={toCorsUrl(info.url)}
                   className="object-contain w-full h-[400px]"
