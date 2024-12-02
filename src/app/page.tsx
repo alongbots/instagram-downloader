@@ -1,6 +1,7 @@
 import Form from '@/app/components/Form'
 import { Github } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
+import { Suspense } from 'react'
 
 export default function Home() {
   return (
@@ -21,7 +22,9 @@ export default function Home() {
         </ul>
       </header>
       <main className="flex flex-col p-8">
-        <Form />
+        <Suspense>
+          <Form />
+        </Suspense>
       </main>
       <Toaster />
     </div>

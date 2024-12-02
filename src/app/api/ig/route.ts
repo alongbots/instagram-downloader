@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     )
   }
   try {
-    const ig = new Ig(postUrl)
+    const ig = new Ig(postUrl as string)
     const info = await ig.getData()
     return NextResponse.json(
       {
