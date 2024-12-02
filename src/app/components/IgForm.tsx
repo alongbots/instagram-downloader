@@ -2,12 +2,15 @@
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios, { AxiosError } from 'axios'
 import { ResourceInfo } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { ToastAction } from '@/components/ui/toast'
+import { isValidIgUrl } from '@/lib/utils'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { POST_URL_PARAMS } from '@/lib/constant'
 
 export default function IgForm({
   onGetData
@@ -16,14 +19,39 @@ export default function IgForm({
 }) {
   const [postUrl, setPostUrl] = useState('')
   const [loading, setLoading] = useState(false)
-
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const router = useRouter()
   const { toast } = useToast()
 
-  const getIgInfo = async () => {
+  useEffect(() => {
+    const url = searchParams.get(POST_URL_PARAMS)
+    if (url) {
+      const decoded = decodeURIComponent(url)
+      setPostUrl(decoded)
+      getIgInfo(decoded)
+    }
+  }, [])
+
+  const updateSearchParams = (url: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set(POST_URL_PARAMS, encodeURIComponent(url))
+    router.push(`${pathname}?${newSearchParams.toString()}`)
+  }
+
+  const getIgInfo = async (url: string = postUrl) => {
     try {
       setLoading(true)
+      if (!isValidIgUrl(url)) {
+        toast({
+          title: 'Error',
+          description: 'Not a valid Instagram link',
+          action: <ToastAction altText="OK">OK</ToastAction>
+        })
+        return
+      }
       const res = await axios({
-        url: `/api/ig/?postUrl=${encodeURIComponent(postUrl)}`,
+        url: `/api/ig?${POST_URL_PARAMS}=${encodeURIComponent(url)}`,
         method: 'get'
       })
       if (res.status !== 200) {
@@ -34,6 +62,7 @@ export default function IgForm({
         })
         return
       }
+      updateSearchParams(url)
       onGetData?.(res.data.data)
     } catch (e) {
       console.log(e)
@@ -54,8 +83,16 @@ export default function IgForm({
   }
 
   const onPaste = async () => {
-    const text = await navigator.clipboard.readText()
-    setPostUrl(text)
+    try {
+      const text = await navigator.clipboard.readText()
+      setPostUrl(text)
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Please allow clipboard access.',
+        action: <ToastAction altText="OK">OK</ToastAction>
+      })
+    }
   }
   return (
     <>
@@ -69,7 +106,7 @@ export default function IgForm({
         {postUrl && <Button onClick={onClear}>Clear</Button>}
         {!postUrl && <Button onClick={onPaste}>Paste</Button>}
       </div>
-      <Button className="mt-4" onClick={getIgInfo} disabled={loading}>
+      <Button className="mt-4" onClick={() => getIgInfo()} disabled={loading}>
         {loading && <Loader2 className="animate-spin" />}
         Download
       </Button>

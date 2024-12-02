@@ -28,3 +28,12 @@ export function toCorsUrl(url: string): string {
   }
   return encodeURI(t)
 }
+
+export function isValidIgUrl(url: any) {
+  if (typeof url !== 'string') {
+    return false
+  }
+  return /^(https?:\/\/)?(www\.)?instagram\.com\/(p|reel|tv)\/[a-zA-Z0-9_\-]+(\/(\?[^#]*)?)?(#.*)?$/.test(
+    url
+  )
+}
