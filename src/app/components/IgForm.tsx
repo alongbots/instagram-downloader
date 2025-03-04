@@ -46,7 +46,7 @@ export default function IgForm({
         toast({
           title: 'Error',
           description: 'Not a valid Instagram link',
-          action: <ToastAction altText="OK">OK</ToastAction>
+          duration: 1500
         })
         return
       }
@@ -58,7 +58,7 @@ export default function IgForm({
         toast({
           title: 'Error',
           description: res.data.message,
-          action: <ToastAction altText="Try again">Try again</ToastAction>
+          duration: 1500
         })
         return
       }
@@ -71,7 +71,7 @@ export default function IgForm({
         description:
           ((e as AxiosError)?.response?.data as any)?.message ??
           (e as AxiosError).message,
-        action: <ToastAction altText="Try again">Try again</ToastAction>
+        duration: 1500
       })
     } finally {
       setLoading(false)
@@ -90,7 +90,7 @@ export default function IgForm({
       toast({
         title: 'Error',
         description: 'Please allow clipboard access.',
-        action: <ToastAction altText="OK">OK</ToastAction>
+        duration: 1500
       })
     }
   }
