@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"instagram-downloader/server-learn/pkg/downloader"
+	"instagram-downloader/server/pkg/downloader"
 	"net/http"
 	"net/url"
 )

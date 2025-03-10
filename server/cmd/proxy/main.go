@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"instagram-downloader/server-learn/internal/handlers"
+	"instagram-downloader/server/internal/handlers"
 )
 
 func main() {
