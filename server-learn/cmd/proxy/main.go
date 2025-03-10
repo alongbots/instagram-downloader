@@ -26,7 +26,8 @@ func main() {
 
 	// 创建路由器
 	mux := http.NewServeMux()
-	mux.HandleFunc("/health", handlers.HealthCheckHandler)
+	mux.HandleFunc("/api/health", handlers.HealthCheckHandler)
+	mux.HandleFunc("/api/download", handlers.DownloadHandler)
 
 	// 添加中间件
 	handler := handlers.CORSMiddleware(
