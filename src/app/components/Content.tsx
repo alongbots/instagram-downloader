@@ -1,6 +1,6 @@
 'use client'
 import IgForm from '@/app/components/IgForm'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ResourceInfo } from '@/types'
 import { toCorsUrl, downloadVideo } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -40,6 +40,16 @@ function Save(props: { href: string }) {
 }
 
 export default function Content() {
+  useEffect(() => {
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(registration => {
+        console.log('Service worker registered:', registration.scope)
+      }).catch(err => {
+        console.error('Service worker registration failed:', err)
+      })
+    }
+  })
+
   const [resourceInfo, setResourceInfo] = useState<ResourceInfo[]>([])
   const { toast } = useToast()
 
