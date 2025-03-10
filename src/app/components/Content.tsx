@@ -2,21 +2,44 @@
 import IgForm from '@/app/components/IgForm'
 import { useState } from 'react'
 import { ResourceInfo } from '@/types'
-import { toCorsUrl } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
+import { toCorsUrl, downloadVideo } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-function LongPressSave(props: { href: string }) {
+
+function Save(props: { href: string }) {
+  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
+  const download = async () => {
+    try {
+      setIsLoading(true)
+      await downloadVideo(props.href, `instagram-${new Date().toLocaleString('en-US')}`)
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'Error',
+        description: 'An Error occurred while downloading',
+        duration: 1500
+      })
+    } finally { 
+      setIsLoading(false)
+    }
+  }
   return (
-    <a href={props.href} download>
-      <Badge>Long Press Save</Badge>
-    </a>
+    <Button
+      variant="outline"
+      className='mt-2'
+      size="sm"
+      onClick={download}
+      disabled={isLoading}
+    >
+      {isLoading && <Loader2 className="animate-spin" />}
+      Click To Save
+    </Button>
   )
 }
 
-
-export default function Form() {
+export default function Content() {
   const [resourceInfo, setResourceInfo] = useState<ResourceInfo[]>([])
   const { toast } = useToast()
 
@@ -60,7 +83,6 @@ export default function Form() {
                   className="object-contain w-full h-[400px]"
                   alt=""
                 />
-                <LongPressSave href={info.url} />
               </div>
             )
           } else if (info.type === 'Video') {
@@ -76,7 +98,7 @@ export default function Form() {
                 >
                   <source src={info.url} type="video/mp4" />
                 </video>
-                <LongPressSave href={info.url} />
+                <Save href={info.url} />
               </div>
             )
           }

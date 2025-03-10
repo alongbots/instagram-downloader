@@ -1,12 +1,11 @@
-import Form from '@/app/components/Form'
+import Content from '@/app/components/Content'
 import { Github } from 'lucide-react'
 import { Toaster } from '@/components/ui/toaster'
 import { Suspense } from 'react'
-import TestDownload from '@/app/components/TestDownload'
 export default function Home() {
   return (
     <div>
-      <header className="shadow-md shadow-rose-700">
+      <header className="shadow-sm shadow-rose-700 backdrop-blur-md sticky top-0 bg-[hsl(var(--background)/.6)]">
         <ul className="w-full flex justify-between py-4 px-8 bg-dark ">
           <li>
             <h1 className="font-bold">Insta J</h1>
@@ -23,9 +22,8 @@ export default function Home() {
       </header>
       <main className="flex flex-col p-8">
         <Suspense>
-          <Form />
+          <Content />
         </Suspense>
-        <TestDownload />
       </main>
       <Toaster />
     </div>

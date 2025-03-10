@@ -102,10 +102,10 @@ export default function IgForm({
           value={postUrl}
           onChange={(e) => setPostUrl(e.target.value)}
         />
-        {postUrl && <Button onClick={onClear}>Clear</Button>}
-        {!postUrl && <Button onClick={onPaste}>Paste</Button>}
+        {postUrl && <Button variant="outline" onClick={onClear}>Clear</Button>}
+        {!postUrl && <Button variant="outline" onClick={onPaste}>Paste</Button>}
       </div>
-      <Button className="mt-4" onClick={() => getIgInfo()} disabled={loading}>
+      <Button className="mt-4" onClick={() => getIgInfo()} disabled={loading} variant="outline">
         {loading && <Loader2 className="animate-spin" />}
         Download
       </Button>

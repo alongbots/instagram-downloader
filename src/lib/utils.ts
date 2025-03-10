@@ -37,3 +37,27 @@ export function isValidIgUrl(url: any) {
     url
   )
 }
+
+/**
+ * download file from url
+ * @param url
+ * @param filename
+ */
+export async function downloadVideo(url: string, filename: string) {
+  try {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    const videoBlob = new Blob([blob], { type: 'video/mp4' })
+    const videoUrl = URL.createObjectURL(videoBlob)
+
+    const link = document.createElement('a')
+    link.href = videoUrl
+    link.download = `${filename}.mp4`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(videoUrl)
+  } catch (error) {
+    console.error('Error downloading file:', error)
+  }
+}
