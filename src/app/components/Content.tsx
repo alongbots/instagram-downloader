@@ -86,7 +86,7 @@ export default function Content() {
         {resourceInfo.map((info, i) => {
           if (info.type === 'Image') {
             return (
-              <div key={i}>
+              <div key={info.url}>
                 <img
                   key={i}
                   src={toCorsUrl(info.url)}
@@ -97,7 +97,7 @@ export default function Content() {
             )
           } else if (info.type === 'Video') {
             return (
-              <div key={i}>
+              <div key={info.url}>
                 <video
                   className="w-full h-[400px] rounded-b"
                   controls
