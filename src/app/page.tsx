@@ -8,7 +8,7 @@ export default function Home() {
       <header className="shadow-sm shadow-rose-700 backdrop-blur-md sticky top-0 bg-[hsl(var(--background)/.6)]">
         <ul className="w-full flex justify-between py-4 px-8 bg-dark ">
           <li>
-            <h1 className="font-bold">Insta J</h1>
+            <h1 className="font-bold">𝐿𝛩𝑅𝐷 𝛥𝐿𝛩𝛮𝐺⁩ INSTA</h1>
           </li>
           <li>
             <a
