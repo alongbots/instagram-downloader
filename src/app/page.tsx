@@ -12,7 +12,7 @@ export default function Home() {
           </li>
           <li>
             <a
-              href="https://github.com/newwangzhicheng/instagram-downloader"
+              href="instagram-downloader-zeta-one.vercel.app"
               target="_blank"
             >
               <Github className="text-white" />
